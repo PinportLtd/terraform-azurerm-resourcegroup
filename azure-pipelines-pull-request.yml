@@ -1,0 +1,117 @@
+
+pr:
+  - main
+
+resources:  
+ - repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  containerRegistryServiceConnectionName: "acr_pinport"
+  Repository: 'golangtesting'
+  azurecontainerRegistry: 'pinport.azurecr.io'
+  dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+  ARM_SUBSCRIPTION_ID: '206c6b04-b170-42cf-ab78-0703dbd83bdc'
+  ARM_CLIENT_ID: '4b565304-99d0-4d41-8759-4b995e042f43'
+  ARM_TENANT_ID: '7f429a9a-bd6a-4c3d-ac35-a100bd4644c8'
+
+stages:
+- stage: CodeCoverage
+  displayName: Analyse Code
+  jobs:
+  - job: CodeCoverage
+    displayName: Analyse code for potential errors
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: PowerShell@2
+      displayName: hello
+      inputs:
+        targetType: 'inline'
+        script:  write-host "HELLO!!!!!!"
+    - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+      inputs:
+        terraformVersion: 'latest'
+    - task: Bash@3
+      displayName: Linting
+      inputs:
+        targetType: 'inline'
+        script: |
+          curl -L "$(curl -Ls https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_linux_amd64.zip")" -o tflint.zip && unzip tflint.zip && rm tflint.zip
+          ./tflint
+    - task: PowerShell@2
+      displayName: gci
+      inputs:
+        targetType: 'inline'
+        script:  Get-ChildItem -r -Directory | Where-Object { $_.GetFileSystemInfos().Count -eq 0 }
+    - task: Bash@3
+      displayName: Check format
+      inputs:
+        targetType: 'inline'
+        script: 'terraform fmt -check -recursive'
+
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: build
+        repository: 'russ'
+        containerRegistry: $(containerRegistryServiceConnectionName)
+        dockerfile: $(dockerfile)
+        tags: |
+          $(tag)
+    - task: Bash@3
+      displayName: mkdir
+      inputs:
+        targetType: 'inline'
+        script: 'mkdir ./test_output'
+    - task: PowerShell@2
+      displayName: gci
+      inputs:
+        targetType: 'inline'
+        script: 'gci . -r'
+    - task: PowerShell@2
+      displayName: docker images
+      inputs:
+        targetType: 'inline'
+        script: 'docker images'
+    - task: PowerShell@2
+      displayName: docker ps -a
+      inputs:
+        targetType: 'inline'
+        script: 'docker ps -a'
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+            docker run \
+              -e ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID) \
+              -e ARM_CLIENT_ID=$(ARM_CLIENT_ID) \
+              -e ARM_CLIENT_SECRET=$(clientsecret) \
+              -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
+              -v $(System.DefaultWorkingDirectory)/test_output:/go/src/windowsvm/test/test_output \
+              $(azurecontainerRegistry)/russ:$(tag)
+      displayName: Run tests in container
+      env:
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(clientsecret)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
+    - task: PowerShell@2
+      displayName: gci ./test_output'
+      inputs:
+        targetType: 'inline'
+        script: 'gci . -r'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+        testResultsFiles: '**/report.xml'
+        failTaskOnFailedTests: true
