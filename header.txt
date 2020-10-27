@@ -10,8 +10,7 @@
 * ``` hcl
 * module "resourcegroup" {
 *   source            = "../../"
-*   location          = var.location
-*   resourcegroupname = var.resourcegroupname
+*   resource_group = var.resource_group_name
 * 
 * }
 * ```
