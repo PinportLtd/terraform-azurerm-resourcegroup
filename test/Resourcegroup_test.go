@@ -52,7 +52,7 @@ func configureTerraformOptions(t *testing.T, fixtureFolder string) *terraform.Op
 
 		// Variables to pass to our Terraform code using -var options
 		Vars: map[string]interface{}{
-			"resource_group": fmt.Sprintf( format: "resourcegroup-%s", uniqueId),
+			"resource_group": fmt.Sprintf( format: "resourcegroup-%s", uniqueId ),
 		},
 	}
 
