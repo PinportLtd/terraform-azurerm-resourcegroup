@@ -1,3 +1,18 @@
+.git
+.gitignore
+.gitattributes
+Dockerfile
+Gemfile
+.gitignore
+Rakefile
+*.md
+!README.md
+**/*.tfstate
+**/*.tfstate.*
+env.*
+devops
+.vscode
+# To prevent storing dev/temporary container data
 # .tfvars files
 *.tfvars
 
@@ -29,3 +44,4 @@ Gemfile.lock
 
 # Local test-kitchen files.
 **/.kitchen/*
+*env

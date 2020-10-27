@@ -1,0 +1,28 @@
+/** 
+* # terraform-azurerm-resourcegroup Module
+*
+* * This module will create a resource group
+* * It has the ability to name the resource group and set the location
+*
+*
+* ## Usage
+*
+* ``` hcl
+* module "resourcegroup" {
+*   source            = "../../"
+*   location          = var.location
+*   resourcegroupname = var.resourcegroupname
+* 
+* }
+* ```
+*
+* ## Scenarios
+*
+* In the examples folder 
+*
+* ## Examples
+*
+* 
+*
+*
+*/
