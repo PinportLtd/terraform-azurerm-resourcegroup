@@ -3,15 +3,15 @@ package testResourcegroup
 import (
 	"fmt"
 	"testing"
-	"github.com/gruntwork-io/terratest/modules/azure"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
 func TestTerraformTemplate(t *testing.T) {
 	t.Parallel()
-	uniqueId := random.UniqueId()
-
+	
+	
 	fixtureFolder := "./fixture"
 
 	// At the end of the test, clean up any resources that were created
@@ -37,7 +37,7 @@ func TestTerraformTemplate(t *testing.T) {
 
 		stringList := terraform.Output(t, terraformOptions, "resource_group_name")
 		fmt.Println(stringList)
-		if len(stringList) <= 6 {
+		if len(stringList) <= 7 {
 			t.Fatal("Wrong output")
 		}
 	})
@@ -45,29 +45,16 @@ func TestTerraformTemplate(t *testing.T) {
 }
 
 func configureTerraformOptions(t *testing.T, fixtureFolder string) *terraform.Options {
-
+	uniqueId := random.UniqueId()
 	terraformOptions := &terraform.Options{
 		// The path to where our Terraform code is located
 		TerraformDir: fixtureFolder,
 
 		// Variables to pass to our Terraform code using -var options
 		Vars: map[string]interface{}{
-			"resource_group": fmt.Sprintf( format: "resourcegroup-%s", uniqueId ),
+			"resource_group": fmt.Sprintf("Resourcegroup-%s", uniqueId),
 		},
 	}
 
 	return terraformOptions
-}
-const base62chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-const uniqueIDLength = 6
-
-func UniqueId() string {
-	var out bytes.Buffer
-
-	generator := newRand()
-	for i := 0; i < uniqueIDLength; i++ {
-		out.WriteByte(base62chars[generator.Intn(len(base62chars))])
-	}
-
-	return out.String()
 }

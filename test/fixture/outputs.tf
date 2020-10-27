@@ -15,7 +15,7 @@ output "resource_group_lock_level" {
   value = module.rg.lock_level
 }
 
-output "resource_group_lock_level" {
+output "resource_group_lock_level_notes" {
   description = "The resource group lock level notes."
   value = module.rg.notes
-}
+} 
