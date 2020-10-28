@@ -63,6 +63,8 @@ stages:
         script: 'terraform fmt -check -recursive'
 
 
+
+        
         
 # - stage: Build
 #   displayName: Build image
