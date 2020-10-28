@@ -2,10 +2,11 @@
 
 pr:
   branches:
-  - main
+   include:
+     - main
   paths:
-    exclude:
-    - ./azure-pipelines-pull-request.yml
+   exclude:
+     - azure-piplines-pull-request.yml
 
 resources:  
  - repo: self
