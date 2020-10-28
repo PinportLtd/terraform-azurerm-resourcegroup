@@ -20,7 +20,7 @@ terratest_log_parser -testlog test_output.log -outputdir test_output
 
 else
     echo "Not in the correct subscription, exiting"
-   # echo "just testing"
+    echo "just testing"
 fi
 
 
