@@ -19,6 +19,9 @@ trigger:
 
 
 
+
+
+
 resources:  
  - repo: self
 
