@@ -5,7 +5,7 @@ pr:
   - main
   paths:
     exclude:
-    - azure-pipelines-pull-request.yml
+    - ./azure-pipelines-pull-request.yml
 
 resources:  
  - repo: self
