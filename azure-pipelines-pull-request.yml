@@ -1,10 +1,10 @@
-# trigger:
-#  branches:
-#    include:
-#      - main
-#  paths:
-#    exclude:
-#      - azure-pipelines-pull-request.yml
+trigger:
+ branches:
+   include:
+     - main
+ paths:
+   exclude:
+     - azure-pipelines-pull-request.yml
 
 pr:
   branches:
