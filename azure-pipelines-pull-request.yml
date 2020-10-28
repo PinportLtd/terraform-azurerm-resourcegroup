@@ -1,4 +1,5 @@
 
+
 pr:
 branches:
   include:
@@ -33,7 +34,7 @@ stages:
       displayName: hello
       inputs:
         targetType: 'inline'
-        script:  write-host "HELLO!!!!!!"
+        script:  write-host "HELLO!!!!!!!!!!!!!!!!!!!"
     - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
       inputs:
         terraformVersion: 'latest'
