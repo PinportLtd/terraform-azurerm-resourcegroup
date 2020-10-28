@@ -22,3 +22,5 @@ else
     echo "Not in the correct subscription, exiting"
 fi
 
+
+
