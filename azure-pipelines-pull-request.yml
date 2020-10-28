@@ -1,6 +1,11 @@
 
 pr:
+branches:
+  include:
   - main
+paths:
+  exclude:
+  - azure-pipelines-pull-request.yml
 
 resources:  
  - repo: self
