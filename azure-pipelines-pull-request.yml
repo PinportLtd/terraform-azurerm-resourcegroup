@@ -6,13 +6,13 @@ trigger:
    exclude:
      - azure-pipelines-pull-request.yml
 
-# pr:
-#   branches:
-#    include:
-#      - main
-#   paths:
-#    exclude:
-#      - azure-pipelines-pull-request.yml
+pr:
+  branches:
+   include:
+     - main
+  paths:
+   exclude:
+     - azure-pipelines-pull-request.yml
 
 
 
