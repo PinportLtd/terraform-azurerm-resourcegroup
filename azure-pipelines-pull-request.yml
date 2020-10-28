@@ -62,6 +62,8 @@ stages:
         targetType: 'inline'
         script: 'terraform fmt -check -recursive'
 
+
+        
 # - stage: Build
 #   displayName: Build image
 #   jobs:  
