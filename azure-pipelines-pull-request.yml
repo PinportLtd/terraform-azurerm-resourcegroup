@@ -1,4 +1,10 @@
-
+trigger:
+ branches:
+   include:
+     - main
+ paths:
+   exclude:
+     - azure-pipelines-pull-request.yml
 
 pr:
   branches:
@@ -6,7 +12,7 @@ pr:
      - main
   paths:
    exclude:
-     - azure-piplines-pull-request.yml
+     - azure-pipelines-pull-request.yml
 
 resources:  
  - repo: self
@@ -56,68 +62,68 @@ stages:
         targetType: 'inline'
         script: 'terraform fmt -check -recursive'
 
-- stage: Build
-  displayName: Build image
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        repository: 'russ'
-        containerRegistry: $(containerRegistryServiceConnectionName)
-        dockerfile: $(dockerfile)
-        tags: |
-          $(tag)
-    - task: Bash@3
-      displayName: mkdir
-      inputs:
-        targetType: 'inline'
-        script: 'mkdir ./test_output'
-    - task: PowerShell@2
-      displayName: gci
-      inputs:
-        targetType: 'inline'
-        script: 'gci . -r'
-    - task: PowerShell@2
-      displayName: docker images
-      inputs:
-        targetType: 'inline'
-        script: 'docker images'
-    - task: PowerShell@2
-      displayName: docker ps -a
-      inputs:
-        targetType: 'inline'
-        script: 'docker ps -a'
+# - stage: Build
+#   displayName: Build image
+#   jobs:  
+#   - job: Build
+#     displayName: Build
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     steps:
+#     - task: Docker@2
+#       displayName: Build an image
+#       inputs:
+#         command: build
+#         repository: 'russ'
+#         containerRegistry: $(containerRegistryServiceConnectionName)
+#         dockerfile: $(dockerfile)
+#         tags: |
+#           $(tag)
+#     - task: Bash@3
+#       displayName: mkdir
+#       inputs:
+#         targetType: 'inline'
+#         script: 'mkdir ./test_output'
+#     - task: PowerShell@2
+#       displayName: gci
+#       inputs:
+#         targetType: 'inline'
+#         script: 'gci . -r'
+#     - task: PowerShell@2
+#       displayName: docker images
+#       inputs:
+#         targetType: 'inline'
+#         script: 'docker images'
+#     - task: PowerShell@2
+#       displayName: docker ps -a
+#       inputs:
+#         targetType: 'inline'
+#         script: 'docker ps -a'
 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-            docker run \
-              -e ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID) \
-              -e ARM_CLIENT_ID=$(ARM_CLIENT_ID) \
-              -e ARM_CLIENT_SECRET=$(clientsecret) \
-              -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
-              -v $(System.DefaultWorkingDirectory)/test_output:/go/src/windowsvm/test/test_output \
-              $(azurecontainerRegistry)/russ:$(tag)
-      displayName: Run tests in container
-      env:
-        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-        ARM_CLIENT_SECRET: $(clientsecret)
-        ARM_TENANT_ID: $(ARM_TENANT_ID)
-    - task: PowerShell@2
-      displayName: gci ./test_output'
-      inputs:
-        targetType: 'inline'
-        script: 'gci . -r'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-        testResultsFiles: '**/report.xml'
-        failTaskOnFailedTests: true
+#     - task: Bash@3
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#             docker run \
+#               -e ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID) \
+#               -e ARM_CLIENT_ID=$(ARM_CLIENT_ID) \
+#               -e ARM_CLIENT_SECRET=$(clientsecret) \
+#               -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
+#               -v $(System.DefaultWorkingDirectory)/test_output:/go/src/windowsvm/test/test_output \
+#               $(azurecontainerRegistry)/russ:$(tag)
+#       displayName: Run tests in container
+#       env:
+#         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+#         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+#         ARM_CLIENT_SECRET: $(clientsecret)
+#         ARM_TENANT_ID: $(ARM_TENANT_ID)
+#     - task: PowerShell@2
+#       displayName: gci ./test_output'
+#       inputs:
+#         targetType: 'inline'
+#         script: 'gci . -r'
+#     - task: PublishTestResults@2
+#       inputs:
+#         testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+#         testResultsFiles: '**/report.xml'
+#         failTaskOnFailedTests: true
