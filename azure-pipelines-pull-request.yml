@@ -14,6 +14,7 @@ pr:
    exclude:
      - azure-pipelines-pull-request.yml
 
+     
 resources:  
  - repo: self
 
