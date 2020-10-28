@@ -2,8 +2,7 @@
 
 pr:
   branches:
-    include:
-    - main
+  - main
   paths:
     exclude:
     - azure-pipelines-pull-request.yml
