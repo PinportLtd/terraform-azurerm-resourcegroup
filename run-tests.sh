@@ -8,14 +8,12 @@ az account set -s $ARM_SUBSCRIPTION_ID
 SUBTRUE=$(az account show --query "isDefault")
 SUBID=$(az account show --query "id")
 SUBID=$(sed -e 's/^"//' -e 's/"$//' <<<"$SUBID")
-if [ "$SUBTRUE" -eq "true" ] -&& [ "$SUBID" -eq "$ARM_SUBSCRIPTION_ID" ] ; then
-
+if [ "$SUBTRUE" == true ] -&& [ "$SUBID" -eq "$ARM_SUBSCRIPTION_ID" ] ; then
+echo "Correct Subscription - starting tests "
 # Run the tests
 cd ./test/
-pwd
-mkdir test_output
+mkdir - ptest_output
 touch ./test_output/russ.txt
-pwd
 go test -v -timeout 30m | tee test_output.log
 terratest_log_parser -testlog test_output.log -outputdir test_output
 
