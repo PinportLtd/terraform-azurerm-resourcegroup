@@ -12,7 +12,7 @@ if [ "$SUBTRUE" == true ] -&& [ "$SUBID" -eq "$ARM_SUBSCRIPTION_ID" ] ; then
 echo "Correct Subscription - starting tests "
 # Run the tests
 cd ./test/
-mkdir - ptest_output
+mkdir -p test_output
 touch ./test_output/russ.txt
 go test -v -timeout 30m | tee test_output.log
 terratest_log_parser -testlog test_output.log -outputdir test_output
