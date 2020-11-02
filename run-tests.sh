@@ -8,7 +8,7 @@ az account set -s $ARM_SUBSCRIPTION_ID
 SUBTRUE=$(az account show --query "isDefault")
 SUBID=$(az account show --query "id")
 SUBID=$(sed -e 's/^"//' -e 's/"$//' <<<"$SUBID")
-if [ "$SUBTRUE" == true ] -&& [ "$SUBID" -eq "$ARM_SUBSCRIPTION_ID" ] ; then
+if [ "$SUBTRUE" == true ] && [ "$SUBID" == "$ARM_SUBSCRIPTION_ID" ] ; then
 echo "Correct Subscription - starting tests "
 # Run the tests
 cd ./test/
