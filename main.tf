@@ -9,5 +9,5 @@ resource "azurerm_management_lock" "resource-group-level" {
   name       = "resource-group-level"
   scope      = azurerm_resource_group.main.id
   lock_level = var.lock_level
-  notes = var.notes
+  notes      = var.notes
 }
