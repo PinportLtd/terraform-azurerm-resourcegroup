@@ -15,7 +15,7 @@ variables:
     value: 'golangtesting'
   - name: dockerfile
     value: '$(Build.SourcesDirectory)/Dockerfile'
-  - group: Allpipes
+  - group: AllPipes
 
 
 stages:
