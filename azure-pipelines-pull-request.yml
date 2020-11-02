@@ -43,11 +43,6 @@ stages:
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
-    - task: PowerShell@2
-      displayName: hello
-      inputs:
-        targetType: 'inline'
-        script:  write-host "HELLO!!!!!!!!!!!!!!!!!!!"
     - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
       inputs:
         terraformVersion: 'latest'
