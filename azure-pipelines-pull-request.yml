@@ -36,8 +36,8 @@ stages:
         organization: $(SonarCloudOrganisation)
         scannerMode: 'CLI'
         configMode: 'manual'
-        cliProjectKey: 'pinportltd_Pinport-Terraform-Modules'
-        cliProjectName: 'Pinport-Terraform-Modules'
+        cliProjectKey: $(cliProjectKey)
+        cliProjectName: $(cliProjectName)
         cliSources: '.'
     - task: SonarCloudAnalyze@1
     - task: SonarCloudPublish@1
@@ -63,7 +63,6 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'terraform fmt -check -recursive'
-
         
 - stage: Build
   displayName: Build image
@@ -107,7 +106,7 @@ stages:
               -e ARM_CLIENT_ID=$(ARM_CLIENT_ID) \
               -e ARM_CLIENT_SECRET=$(clientsecret) \
               -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
-              -v "$(System.DefaultWorkingDirectory)/test_output:/go/src/windowsvm/test/test_output" \
+              -v "$(System.DefaultWorkingDirectory)/test_output:/go/src/$(testname)/test/test_output" \
               $(azurecontainerRegistry)/russ:$(tag)
       displayName: Run tests in container
       env:
