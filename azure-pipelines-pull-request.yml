@@ -12,14 +12,14 @@ resources:
  - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
-  containerRegistryServiceConnectionName: "acr_pinport"
-  Repository: 'golangtesting'
-  azurecontainerRegistry: 'pinport.azurecr.io'
-  dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-  ARM_SUBSCRIPTION_ID: '206c6b04-b170-42cf-ab78-0703dbd83bdc'
-  ARM_CLIENT_ID: '4b565304-99d0-4d41-8759-4b995e042f43'
-  ARM_TENANT_ID: '7f429a9a-bd6a-4c3d-ac35-a100bd4644c8'
+  - name: tag
+    value: '$(Build.BuildId)'
+  - name: Repository
+    value: 'golangtesting'
+  - name: dockerfile
+    value: '$(Build.SourcesDirectory)/Dockerfile'
+  - group: Allpipes
+
 
 stages:
 - stage: CodeCoverage
@@ -33,7 +33,7 @@ stages:
     - task: SonarCloudPrepare@1
       inputs:
         SonarCloud: 'SonarCloud'
-        organization: 'pinportltd'
+        organization: $(SonarCloudOrganisation)
         scannerMode: 'CLI'
         configMode: 'manual'
         cliProjectKey: 'pinportltd_Pinport-Terraform-Modules'
@@ -97,11 +97,6 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'docker images'
-    - task: PowerShell@2
-      displayName: docker ps -a
-      inputs:
-        targetType: 'inline'
-        script: 'docker ps -a'
 
     - task: Bash@3
       inputs:
@@ -125,11 +120,6 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'gci . -r'
-    - task: PowerShell@2
-      displayName: 'Docker logs'
-      inputs:
-        targetType: 'inline'
-        script: 'docker ps -a'
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
